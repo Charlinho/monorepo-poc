@@ -1,3 +1,9 @@
 {
-  "branches": ["main", "next"]
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/github", {
+      "GITHUB_TOKEN": "c8befb1e0379e6f5aea983afb7fed8ea2ad266af"
+    }]
+  ]
 }
