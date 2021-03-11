@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "cli": {
+    "defaultCollection": "@nrwl/angular"
+  },
+  "defaultProject": "monorepo-poc",
+  "schematics": {
+    "@nrwl/angular": {
+      "application": {
+        "linter": "eslint"
+      },
+      "library": {
+        "linter": "eslint"
+      },
+      "storybook-configuration": {
+        "linter": "eslint"
+      }
+    },
+    "@nrwl/angular:application": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "style": "scss",
+      "linter": "eslint",
+      "unitTestRunner": "jest"
+    },
+    "@nrwl/angular:component": {
+      "style": "scss"
+    }
+  },
+  "projects": {
+    "monorepo-poc": {
+      "projectType": "application",
+      "root": "apps/monorepo-poc",
+      "sourceRoot": "apps/monorepo-poc/src",
+      "prefix": "monorepo-poc",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/monorepo-poc",
+            "index": "apps/monorepo-poc/src/index.html",
+            "main": "apps/monorepo-poc/src/main.ts",
+            "polyfills": "apps/monorepo-poc/src/polyfills.ts",
+            "tsConfig": "apps/monorepo-poc/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/monorepo-poc/src/favicon.ico",
+              "apps/monorepo-poc/src/assets"
+            ],
+            "styles": ["apps/monorepo-poc/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/monorepo-poc/src/environments/environment.ts",
+                  "with": "apps/monorepo-poc/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "monorepo-poc:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "monorepo-poc:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "monorepo-poc:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/monorepo-poc/src/**/*.ts",
+              "apps/monorepo-poc/src/**/*.html"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/apps/monorepo-poc"],
+          "options": {
+            "jestConfig": "apps/monorepo-poc/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "monorepo-poc-e2e": {
+      "root": "apps/monorepo-poc-e2e",
+      "sourceRoot": "apps/monorepo-poc-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/monorepo-poc-e2e/cypress.json",
+            "tsConfig": "apps/monorepo-poc-e2e/tsconfig.e2e.json",
+            "devServerTarget": "monorepo-poc:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "monorepo-poc:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/monorepo-poc-e2e/**/*.{js,ts}"]
+          }
+        }
+      }
+    }
+  }
+}
