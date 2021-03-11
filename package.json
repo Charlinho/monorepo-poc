@@ -83,7 +83,6 @@
     "typescript": "~4.0.3"
   },
   "release": {
-    "extends": "semantic-release-monorepo",
     "branches": [
       "+([0-9])?(.{+([0-9]),x}).x",
       "main",
@@ -98,6 +97,7 @@
         "prerelease": true
       }
     ],
+    "defaultBranch": "main",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
